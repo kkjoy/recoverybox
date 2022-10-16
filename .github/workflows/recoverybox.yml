@@ -53,14 +53,6 @@ jobs:
         make -j$(nproc)
         make_ext4fs -l 64M -s bin/recoverybox32.ext4 build_dir/target-arm_cortex-a15+neon-vfpv4_musl_eabi/root-armvirt
 
-    - name: Generate release tag
-      id: tag
-      run: |
-        echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
-        touch release.txt
-        echo "🔗 recoverybox32 for histb" >> release.txt
-        echo "🔗 recoverybox64 for histb" >> release.txt
-        echo "::set-output name=status::success"
 
     - name : Upload packages
       uses: actions/upload-artifact@master
