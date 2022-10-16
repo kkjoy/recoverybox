@@ -10,15 +10,15 @@ on:
   repository_dispatch:
   workflow_dispatch:
 
-  push:
-    branches: 
-      - main
+ # push:
+ #  branches: 
+ #     - main
 
 #  schedule:
 #    - cron: 0 8 * * 5
 
-  #watch:
-  #  types: [started]
+  watch:
+    types: [started]
 
 jobs:
   build:
@@ -62,27 +62,10 @@ jobs:
         echo "🔗 recoverybox64 for histb" >> release.txt
         echo "::set-output name=status::success"
 
-    - name: Upload firmware to release
-      uses: softprops/action-gh-release@v1
-      if: steps.tag.outputs.status == 'success' && !cancelled()
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name : Upload packages
+      uses: actions/upload-artifact@master
+      if: always()
       with:
-        tag_name: ${{ steps.tag.outputs.release_tag }}
-        body_path: release.txt
-        files: bin/*.ext4
-
-    - name: Delete workflow runs
-      uses: GitRML/delete-workflow-runs@main
-      with:
-        retain_days: 1
-        keep_minimum_runs: 3
-
-    - name: Remove old Releases
-      uses: dev-drprasad/delete-older-releases@v0.1.0
-      with:
-        keep_latest: 3
-        delete_tags: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        name: recoverybox64
+        path: bin/*.ext4
 
